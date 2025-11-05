@@ -3,13 +3,22 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { authMiddleware } from '../middleware/auth'; 
+import rateLimit from 'express-rate-limit';
 
 const prisma = new PrismaClient();
 const router = Router();
 
+// Rate limiter: 100 requests per 15 min per IP (tune values as needed)
+const productsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true, // Return rate limit info in headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
 // RUTA PARA OBTENER PRODUCTOS CON PAGINACIÓN
 // Endpoint: GET /api/products?page=1&limit=10
-router.get('/', authMiddleware, async (req: Request, res: Response) => {
+router.get('/', productsLimiter, authMiddleware, async (req: Request, res: Response) => {
     try {
         // 1. Obtener y validar parámetros de paginación
         // Aseguramos que 'page' y 'limit' sean números y tengan valores por defecto
