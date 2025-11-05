@@ -1,11 +1,20 @@
 import { Router, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import { RowDataPacket } from 'mysql2/promise';
 import { poolMySQL } from '../db/database';
 
 const router = Router();
 
+// Set up rate limiter: max 100 requests per 15 minutes per IP for this route
+const productsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true, // Return rate limit info in the RateLimit-* headers
+    legacyHeaders: false, // Disable the X-RateLimit-* headers
+});
+
 // Endpoint para el listado de productos con paginación
-router.get('/products', async (req: Request, res: Response) => {
+router.get('/products', productsLimiter, async (req: Request, res: Response) => {
     // 1. Obtener parámetros y definir valores por defecto
     // Si no se envía 'page', se asume 1. Si no se envía 'limit', se asume 10.
     const page = parseInt(req.query.page as string) || 1;
