@@ -31,7 +31,15 @@ module.exports = router;
 // RUTA PRINCIPAL DE BÚSQUEDA Y CATÁLOGO
 app.get('/api/buscador', async (req, res) => {
     // 1. Manejo de Parámetros de Paginación y Búsqueda
-    let terminoBusqueda = req.query.query as string || '';
+    const rawQuery = req.query.query;
+    let terminoBusqueda: string = '';
+    // Type check for query parameter: must be string and non-empty
+    if (typeof rawQuery === 'string') {
+        terminoBusqueda = rawQuery;
+    } else if (typeof rawQuery !== 'undefined') {
+        // If provided but not a string (e.g., array, object), reject
+        return res.status(400).json({ error: 'Formato de parámetro query inválido.' });
+    }
     const page = parseInt(req.query.page as string) || 1;
     const limit = 10; 
     const offset = (page - 1) * limit; // Fórmula clave: (página - 1) * límite
