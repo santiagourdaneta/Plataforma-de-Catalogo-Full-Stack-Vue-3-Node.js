@@ -1,0 +1,28 @@
+# back/stress-test.yml
+config:
+  # 1. Definición del objetivo (Tu backend)
+  target: "http://localhost:3000"
+  phases:
+    # 2. Definición del ataque (La "ola" de peticiones)
+    # Rampa lenta: subimos la carga lentamente para no saturar tu laptop de golpe.
+    - duration: 60  # Duración total de la prueba: 60 segundos
+      arrivalRate: 5 # Tasa inicial: 5 nuevos usuarios por segundo (lento, ideal para empezar)
+      name: "Rampa de Carga Inicial"
+
+  # 3. Datos y Cabeceras (Necesitas un token de prueba VÁLIDO aquí)
+  # 🛑 Importante: Necesitas un token JWT real y válido de un usuario registrado
+  defaults:
+    headers:
+      # Reemplaza [TU_TOKEN_JWT_AQUÍ] con un token que obtuviste en tu login
+      Authorization: "Bearer [TuSecretoMuyLargoYAletorio1234567890]" 
+
+scenarios:
+  # 4. Qué hacer en cada petición (El "comportamiento del usuario")
+  - name: "Acceso al Catálogo Paginado"
+    flow:
+      # Petición GET a la ruta de productos (simulando que el usuario navega)
+      - get: "/api/products?page=1&limit=10"
+
+
+
+    

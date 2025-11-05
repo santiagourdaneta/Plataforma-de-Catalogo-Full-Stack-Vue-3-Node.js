@@ -1,0 +1,54 @@
+// back/prisma/schema.prisma
+
+// 1. Configuración de la Base de Datos
+// 'mysql' es el motor, y 'DATABASE_URL' se obtiene de tu archivo .env
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 2. Configuración del Cliente Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ===================================
+// MODELOS
+// ===================================
+
+// Modelo de Usuario (Para el Login/Autenticación)
+model User {
+  // Id: Identificador único autoincremental
+  id       Int    @id @default(autoincrement())
+  
+  // Email: Se usa como nombre de usuario, debe ser único
+  email    String @unique
+  
+  // Password: Se guarda el hash encriptado (NUNCA el texto plano)
+  password String
+  
+  // Opcional: Nombre del usuario para mostrar
+  name     String?
+}
+
+// Modelo de Producto (El Catálogo)
+model Product {
+  // Id: Identificador único
+  id          Int     @id @default(autoincrement())
+  
+  // Nombre: Nombre del producto, no nulo
+  name        String
+  
+  // Descripción: Texto largo para la descripción, puede ser nulo
+  description String? @db.VarChar(500)
+  
+  // Price: Precio del producto, almacenado como decimal para precisión
+  price       Decimal @db.Decimal(10, 2)
+  
+  // Stock: Cantidad de productos en almacén
+  stock       Int     @default(0)
+  
+  // createdAt/updatedAt: Tiempos automáticos para auditoría
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,38 @@
+# Dependencias
+/node_modules
+/dist
+/build
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.log
+
+# IDEs y Editores
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Backend (si usas TypeScript/Node.js)
+/back/node_modules
+/back/dist
+/back/temp
+*.tsbuildinfo
+
+# Frontend (si usas Vue/Vite)
+/front/node_modules
+/front/dist
+.env.local
+.env.*.local
+
+# Archivos de caché/temporales de Vite
+.vitepress/cache
+.nuxt
+/out
