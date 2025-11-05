@@ -5,6 +5,7 @@ import mysql, { Pool, RowDataPacket, FieldPacket } from 'mysql2/promise';
 import cors from 'cors';
 import authRouter from './routes/authRoutes';
 import { poolMySQL } from './db/database';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 const PORT = 3000;
@@ -22,6 +23,14 @@ app.use(cors({
 // Middleware para procesar JSON (mantener)
 app.use(express.json());
 
+// Rate limiting middleware (e.g. 100 requests/15 minutes per IP for demonstration)
+const buscadorLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true, // Return rate limit info in the RateLimit-* headers
+    legacyHeaders: false, // Disable the X-RateLimit-* headers
+});
+
 const router = express.Router();
 
 app.use('/api/auth', authRouter);
@@ -29,7 +38,7 @@ app.use('/api/auth', authRouter);
 module.exports = router;
 
 // RUTA PRINCIPAL DE BÚSQUEDA Y CATÁLOGO
-app.get('/api/buscador', async (req, res) => {
+app.get('/api/buscador', buscadorLimiter, async (req, res) => {
     // 1. Manejo de Parámetros de Paginación y Búsqueda
     const rawQuery = req.query.query;
     let terminoBusqueda: string = '';
