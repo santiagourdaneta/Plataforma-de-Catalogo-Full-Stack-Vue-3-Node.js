@@ -97,17 +97,14 @@ router.post('/login', loginLimiter, validate(loginSchema), async (req: Request, 
             return res.status(401).json({ message: 'Credenciales inválidas.' });
         }
                
-                console.log(`Contraseña ALMACENADA en la DB (HASH): ${user.password}`); // ¡Tu hash!
-                console.log('---------------------------');
+                
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Credenciales inválidas.' });
         }
 
-        // console.log('JWT_SECRET usado para verificación:', process.env.JWT_SECRET); // <-- REMOVED, never log secret value!
-        console.log('JWT_SECRET está configurado:', !!process.env.JWT_SECRET); // Optionally log presence only (safe)
-
+      
         if (!process.env.JWT_SECRET) {
              throw new Error("JWT_SECRET no está configurado en el archivo .env");
         }
