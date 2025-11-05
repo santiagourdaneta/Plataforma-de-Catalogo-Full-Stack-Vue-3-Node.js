@@ -23,7 +23,6 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
         });
     }
 
-    console.log('JWT_SECRET usado para verificación:', process.env.JWT_SECRET);
 
     // 3. Verificar si JWT_SECRET está definido
     if (!process.env.JWT_SECRET) {
