@@ -89,7 +89,7 @@ router.post('/login', loginLimiter, validate(loginSchema), async (req: Request, 
         // 🛑 LÍNEAS DE DEPURACIÓN AÑADIDAS 🛑
                 console.log('--- DEPURACIÓN DE LOGIN ---');
                 console.log(`Email del formulario: ${email}`);
-                console.log(`Contraseña RECIBIDA del formulario: ${password}`); // ¡La contraseña en texto plano!
+                console.log('Contraseña RECIBIDA del formulario: [REDACTED]'); // No log in clear text!
 
     try {
         const user = await prisma.user.findUnique({ where: { email } });
